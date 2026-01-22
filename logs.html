@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Logs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #2c3e50;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        .alert { color: #e74c3c; font-weight: bold; }
+        .xss { color: #f39c12; }
+        .hijack { color: #9b59b6; }
+        .logout { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Security Logs</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Attack Type</th>
+                    <th>IP Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.timestamp }}</td>
+                    <td>
+                        {% if 'SQL' in log.attack_type %}
+                            <span class="alert">{{ log.attack_type }}</span>
+                        {% elif 'XSS' in log.attack_type %}
+                            <span class="xss">{{ log.attack_type }}</span>
+                        {% elif 'Hijack' in log.attack_type %}
+                            <span class="hijack">{{ log.attack_type }}</span>
+                        {% else %}
+                            {{ log.attack_type }}
+                        {% endif %}
+                    </td>
+                    <td>{{ log.ip_address }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="logout">
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+</body>
+</html>
